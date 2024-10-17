@@ -72,3 +72,5 @@ These are created by the programmer:
    - Features from newer standards: `decltype`, `auto`, `nullptr`, smart pointers, wide characters, etc.
 
 This breakdown should help you give a comprehensive answer if asked about the various data types in C and C++. You can also mention how the standards have evolved (e.g., C99, C++11, C++14, C++17, C++20) if the interviewer dives deeper.
+
+## Const
