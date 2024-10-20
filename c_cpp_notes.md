@@ -1,5 +1,128 @@
 # C and C++ notes
 
+## Compiler Stages:
+
+1. Preprocessing Stage(main.c -> main.i)
+
+- expansion of macros
+- expansion of includes
+- conditional compilation
+- removal of comments
+
+Errors like header file not found, incorrect preprocessor syntax(missing #endif for #if) or improperly defined macros are caught here itself.
+
+2. Compiling Stage(main.i -> main.o)
+
+- This stage involves syntax checking, type checking and semantics checking. It translated high-level C code into assembly-level code.
+
+- Errors like syntax errors, type mismatch or misuse of variables, illegal operations are caught.
+
+- Compiler find bugs or errors by comparing source code with the list of grammar rules specific to the programming language.
+
+There are 4 stages in this as well where it does lexical analysis, syntax analysis, semantics analysis and then intermediate code generation.
+
+3. Assembling Stage(main.s -> main.o)
+
+In this stage, assembler takes in the assembly level code file and generates the machine code. This stage converts the human-readable assembly instructions into CPU-specific opcodes.At this stage function calls are not resolved.
+
+4. Linking Stage(main.o -> .exe)
+
+In this stage, all linking of function calls with their definition is done. Linker knows where all these functions are implemented. It also add extra code that is needed during start and end of the program. Linker also determines the memory layout of the program, assigning addresses to the global variables and funtions. Function calls and references are resolved, linking libraries and generating the executable.
+
+Errors like multiple definition error, undefined references(if a function is declared but never defined, then the linker can't resolve the reference, basically calling a function that has not been implemented) or library issues are caught here.
+
+
+## Execution of the Generated executable
+
+When you double-click an executable like `main.exe`, a series of processes are initiated by the operating system (OS) to load and run the program. Here's a detailed explanation of what happens, along with the program layout, which is essential for understanding how the executable is executed.
+
+### **1. Loading the Executable**
+- **Step 1: User Action**: Double-clicking the `.exe` file sends a request to the OS to run the program.
+- **Step 2: OS Process Creation**:
+  - The OS (e.g., Windows) will create a **process** for `main.exe`. This involves allocating resources, creating a new process control block (PCB), and setting up the environment for the program to run.
+  - The OS uses a **program loader** to read the executable file from the **hard drive** (HDD/SSD) into **memory (RAM)**.
+
+**Interview Insight**:
+- Explain that modern operating systems use a technique called **demand paging**, where only parts of the program are loaded into memory initially, and other parts are loaded as needed, helping in efficient memory utilization.
+
+### **2. Program Memory Layout**
+When `main.exe` is loaded into memory, it follows a specific **memory layout**. Here’s a breakdown of the sections:
+
+![alt text](c_program_layout.png)
+
+#### **Memory Layout of a Running Program:**
+
+| Segment       | Description |
+|---------------|-------------|
+| **Stack**     | Contains local variables, function call information (e.g., return addresses, parameters), and is managed in a Last-In-First-Out (LIFO) manner. It grows downward. |
+| **Heap**      | Used for dynamic memory allocation (e.g., using `malloc` or `new`), grows upward, and managed by the programmer. |
+| **Data Segment** - **Initialized Data** | Stores global and static variables that are initialized (e.g., `int x = 5;`).|
+| **Data Segment** - **Uninitialized Data (BSS)** | Contains global and static variables that are not explicitly initialized (e.g., `int y;`).|
+| **Text Segment** | Holds the actual compiled machine code instructions of the program. This segment is **read-only** to prevent accidental modifications. |
+| **Command Line Arguments/Environment Variables** | The OS passes command-line arguments and environment variables to this section. |
+
+**Interview Insight**:
+- You can explain how **stack overflow** or **memory leaks** can occur due to improper usage of stack and heap, respectively.
+- Understanding the role of each segment (e.g., **data, text, heap, stack**) and how they grow in relation to each other is important for embedded programming, where memory is a critical resource.
+
+### **3. Memory Mapping**
+- The OS uses a **memory management unit (MMU)** to handle **virtual memory**, mapping virtual addresses to physical addresses. This means that the program thinks it's accessing a continuous block of memory, but the OS maps these addresses to the actual physical memory locations.
+- The OS sets up **page tables** for the process, ensuring each virtual address points to the correct physical memory.
+
+**Key Points for Interviews**:
+- Discuss how **address space isolation** prevents different processes from accessing each other’s memory, a critical security feature.
+- Mention **shared libraries (DLLs in Windows)** and how they are also mapped into the process’s address space, avoiding redundancy.
+
+### **4. Executing the Program**
+- **Step 1: Program Counter (PC)**: The **program counter** is set to the entry point of the program (usually `main` function in C/C++).
+- **Step 2: Stack Initialization**:
+  - The OS sets up the **stack pointer** (SP) to point to the top of the stack. It also initializes the **base pointer** (BP) for stack frame management.
+  - **Command-line arguments** and **environment variables** are pushed onto the stack before starting the program.
+- **Step 3: Execution Begins**:
+  - The CPU begins executing instructions sequentially, starting from the `main` function.
+  - During execution, if the program needs to call a function, it will:
+    - Push the **return address** and **arguments** onto the stack.
+    - Jump to the function’s address in the **text segment**.
+    - When the function completes, it will pop the **return address** from the stack and continue execution.
+
+**Interview Insight**:
+- Explain the **call stack** and how it manages function calls, and why **recursive functions** need careful handling (to prevent stack overflow).
+- Demonstrate knowledge of **how interrupts** or **context switches** might affect program execution if the OS decides to pause your program and switch to another.
+
+### **5. System Calls & Interaction with OS**
+- Programs need to interact with hardware (e.g., read a file, send data over the network). They do this using **system calls**.
+- **Example**: If `main.exe` needs to read a file, it will invoke a system call (e.g., `open`, `read`) which causes the CPU to switch from **user mode** to **kernel mode** to safely execute these operations.
+- System calls are vital for program interaction with devices, memory management, file handling, etc.
+
+**Key Terms**:
+- **User Mode vs. Kernel Mode**: User mode limits the program’s ability to directly access hardware. Only kernel mode can safely perform these actions.
+- **Process Scheduler**: Manages how the CPU time is shared between different running processes.
+
+**Interview Insight**:
+- Describe how **system calls** are crucial for **I/O operations**, **memory management**, and other interactions, showing your understanding of how user programs and the OS cooperate.
+
+### **6. Termination**
+- When `main.exe` finishes execution (i.e., the `main` function returns), the OS will:
+  - Clean up resources (e.g., close open file descriptors, free allocated memory).
+  - The process is removed from the list of active processes.
+  - Any **exit status** is returned to the parent process (often the command line or shell).
+
+### **Summary**
+When asked to describe what happens when you run an executable:
+1. **Process Creation**: The OS creates a process, assigns resources, and prepares to run the program.
+2. **Memory Layout**: Understand the program layout (text, data, heap, stack) and how it's mapped into the process's address space.
+3. **Execution & System Calls**: The CPU executes instructions starting from the entry point (`main`), using system calls for I/O and other interactions.
+4. **Termination & Cleanup**: The OS handles cleanup and resource management once the program finishes.
+
+### **Extra Tip for Interviews**
+- If you can, mention **specific optimizations** like **copy-on-write** or **shared memory** that the OS may use to make the process more efficient.
+- Discuss how knowing these details helps in **debugging**, **optimizing performance**, and understanding **low-level interactions** in embedded systems.
+
+This level of detail should give you a solid foundation to answer this question impressively in an interview!
+
+
+
+
 ## Primitive data type:
 
 All the data types in C and C++, we can categorize them into different groups: **fundamental (or primitive) data types**, **derived data types**, **user-defined data types**, and **additional types provided by C++**. Here's how you can explain them:
@@ -209,7 +332,21 @@ public:
 - When preparing for interviews, make sure you can explain why and when each method should be used, and recognize situations that require initializer lists.
 
 
-## Const
+## Priority Inversion(OS)
 
-This basically makes the variable immutable 
+This is a case where higher priority task is waiting for lower priority task to release the resources(semphores or mutex) that it needs. This defeats the purpose of priority-based scheduling where higher priority task is executed before lower priority task leading to unexpected behaviour, missing deadlines, system latency. Well it can occur in RTOS and multi-tasking environments where different tasks have different priorities.
+
+## Volatile Qualifier
+
+the volatile qualifier in C/C++ tell the compiler that the variable might change its value unexpectedly, even if the program doesn't explicitly modify. This prevent compiler from applying certain optimizations that assume the value will not change. Actually, it means that the value can be changed by interrupt or hardware. 
+
+## Static Keyword
+
+
+
+
+
+
+
+
 
