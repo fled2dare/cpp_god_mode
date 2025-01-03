@@ -236,16 +236,16 @@ The capability of a class to derive properties and characteristics from another 
        int& ref = a;  // ref is an alias for a
        ```
 
-    Explaining what it means for a **reference** to be an "alias" to a variable.
+Explaining what it means for a **reference** to be an "alias" to a variable.
 
-    ### **What is an Alias to a Variable?**
-    - When we say a **reference** is an "alias" to a variable, it means the reference is just another name for the same variable. 
-    - Any operation performed using the reference actually affects the original variable, because both the reference and the original variable point to the **same memory location**.
-    - **Example**: If you have `int x = 10;` and create `int& ref = x;`, both `x` and `ref` refer to the same integer `10`. Changing `ref` will also change `x`, and vice versa.
+### **What is an Alias to a Variable?**
+- When we say a **reference** is an "alias" to a variable, it means the reference is just another name for the same variable. 
+- Any operation performed using the reference actually affects the original variable, because both the reference and the original variable point to the **same memory location**.
+- **Example**: If you have `int x = 10;` and create `int& ref = x;`, both `x` and `ref` refer to the same integer `10`. Changing `ref` will also change `x`, and vice versa.
 
-    ### **Code Example: Pointers vs References**
+### **Code Example: Pointers vs References**
 
-    Here's a complete code example you can run on your PC:
+Here's a complete code example you can run on your PC:
 
     ```cpp
     #include <iostream>
@@ -293,17 +293,19 @@ The capability of a class to derive properties and characteristics from another 
     }
     ```
 
-    ### **Explanation**
-    1. **Pointers**:
-      - `ptr` is a pointer that stores the **address** of `x`. 
-      - We can use `*ptr` (dereferencing) to access the value stored at that address.
-      - Changing `*ptr` changes the value of `x` because `ptr` points to `x`.
+### **Explanation**
+1. **Pointers**:
+  - `ptr` is a pointer that stores the **address** of `x`. 
+  - We can use `*ptr` (dereferencing) to access the value stored at that address.
+  - Changing `*ptr` changes the value of `x` because `ptr` points to `x`.
 
-    2. **References**:
-      - `ref` is a **reference** to `y`, meaning it is just another name for `y`. 
-      - Any change made to `ref` will directly change `y` and vice versa because they refer to the same memory location.
+2. **References**:
+  - `ref` is a **reference** to `y`, meaning it is just another name for `y`. 
+  - Any change made to `ref` will directly change `y` and vice versa because they refer to the same memory location.
 
-    ### **Expected Output**
+### **Expected Output**
+    
+    
     ```
     Demonstrating Pointers:
     Value of x: 10
@@ -317,4 +319,3 @@ The capability of a class to derive properties and characteristics from another 
     After changing ref, y is: 25
     After changing y, ref is: 35
     ```
-

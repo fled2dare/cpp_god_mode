@@ -24,7 +24,7 @@ int main(){
     Animal *animalptr = &dog; // upcasting
     animalptr->makeSound(); // bark
 
-    Dog *dogptr = dynamic_cast<Dog*>(animalptr);
+    Dog *dogptr = dynamic_cast<Dog*>(animalptr); // this is for downcasting
     if(dogptr)dogptr->wagTail();
     else{
         std::cout << "downcasting failed" << std::endl;
