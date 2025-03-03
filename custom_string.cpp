@@ -28,7 +28,7 @@ class CustomString {
             // this && is passing rvalue reference
             len = str.len;
             res = str.res;
-            str = nullptr;
+            str.res = nullptr;
             str.len = 0;
        }
 
